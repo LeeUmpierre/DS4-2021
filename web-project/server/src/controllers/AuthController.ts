@@ -2,13 +2,19 @@ import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import { User } from '../models/User';
 import { sign } from 'jsonwebtoken'
+import { AppException } from '../exceptions/AppException';
 
+import dotenv from 'dotenv';
+
+//Carrega variáveis de ambiente
+dotenv.config();
 
 class AuthController {
 
     public async create(request: Request, response: Response) {
         
         try {
+            
             //Instancio um Repository da classe User
             const repository = getRepository(User);
 
@@ -20,9 +26,9 @@ class AuthController {
             
             //Retorno o objeto inserido
             return response.status(201).json( created );
-            
+
         } catch (error) {
-            return response.status(error.code).json({message: error.message});
+            return response.status(error.code).json(error);
         }
 
     }
@@ -42,23 +48,33 @@ class AuthController {
 
             //To-do: Se usuario inválido, responder "Usuário Inválido"
             if (!foundUser) {
-                return response.status(403).json({message: 'auth-invalid-username'});
+                throw new AppException('Usuário inválido', 'auth-invalid-username', 403);
             }
 
             //To-do: Validar a senha: se senha inválida, responder "Senha Inválida"
             if (foundUser.password != password) {
-                return response.status(403).json({message: 'auth-invalid-password'});
+                throw new AppException('Senha inválida', 'auth-invalid-password', 403);
             }
 
-            //To-do: Se usuário e senha corretos, devolver um token (JWT)
-            const payload = {user: foundUser};
-            const token = sign(payload, 'materdei', {
+            //To-do: Se usuário e senha corretos, devolver um token (JWT) com os dados básicos do usuário
+            const user = {
+                id: foundUser.id,
+                name: foundUser.name,
+                email: foundUser.email,
+                avatar: foundUser.avatar
+            }
+            
+            //Carrega a chave da criptografia
+            const criptoKey = process.env.CRIPTO_KEY as string;
+
+            //Monta o token para ser retornado
+            const token = sign(user, criptoKey, {
                 expiresIn: '1h'
             })
 
-            return response.json({ token: token })
+            return response.json({ token: token, user: user })
         } catch (error) {
-            response.status(error.code).json({message: error.message});
+            response.status(error.code).json(error);
         }
 
     }
