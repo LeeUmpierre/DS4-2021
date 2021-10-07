@@ -1,5 +1,7 @@
 import { AppBar, Avatar, IconButton, Toolbar, Tooltip, Typography } from "@material-ui/core";
+import { useEffect } from "react";
 import { useAuth } from "../../hooks/useAuth";
+import serverAPI from "../../services/serverAPI";
 
 import './style.scss';
 
