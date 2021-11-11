@@ -10,7 +10,7 @@ import '@fontsource/roboto/700.css';
 import './styles/global.scss';
 
 ReactDOM.render(
-    <App />,
+  <App />,
   document.getElementById('root')
 );
 
