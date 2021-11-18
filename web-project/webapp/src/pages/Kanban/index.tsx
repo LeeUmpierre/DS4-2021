@@ -64,7 +64,6 @@ export function Kanban() {
             });
 
     }, []);
-
     function handleOpenDialogNewColumn() {
         //Resetar as variaveis
         setColumnName('');
@@ -72,11 +71,9 @@ export function Kanban() {
 
         setOpenDialogColumn(true);
     }
-
     function handleSelectColor(color: ColorResult, event: ChangeEvent) {
         setColumnColor(color.hex);
     }
-
     function handleCreateColumn() {
         if (columnName.trim() === '') {
             setError({
@@ -112,7 +109,6 @@ export function Kanban() {
                 setLoading(false);
             })
     }
-
     function handleAddTask(statusColumn: StatusColumn) {
         
         setTask({
@@ -151,6 +147,8 @@ export function Kanban() {
             .finally(() => {
                 setLoading(false);
             })
+    }
+    function handleOpenTask(){
     }
     return (
         <div id="page-kanban">
@@ -195,7 +193,7 @@ export function Kanban() {
                                     {tasks.filter(item => statusColumn.id === item.statusColumn.id).map(task => {
                                         return (
                                             <div
-                                                key={task.id}                                                 
+                                                key={task.id}                                                  
                                                 className="kanban-card card-task">
                                                     <Typography variant="body2" component="h5">
                                                         {task.title}
@@ -324,7 +322,7 @@ export function Kanban() {
                         variant="contained"
                         size="medium"
                         onClick={handleCreateColumn}
-                        disabled={loading}
+                        disabled={loading} 
                     >
                         Confirmar
                     </Button>
@@ -334,3 +332,5 @@ export function Kanban() {
         </div>
     );
 }
+
+
