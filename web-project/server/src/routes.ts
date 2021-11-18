@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import AuthController from './controllers/AuthController';
 import ProjectController from './controllers/ProjectController';
+import TemplateController from './controllers/TemplateController';
 import StatusColumnController from './controllers/StatusColumnController';
 import TaskController from './controllers/TaskController';
 import TokenController from './controllers/TokenController';
@@ -22,6 +23,20 @@ routes.route('/projects/:id')
     .get(ProjectController.show)
     .put(ProjectController.update)
     .delete(ProjectController.remove);
+
+//TEMPLATES
+routes.route('/templates')
+    .all(TokenController.validate)
+    .get(TemplateController.index)
+    .post(TemplateController.create);
+
+routes.route('/templates/:idTemplate')
+    .all(TokenController.validate)
+    .delete(TemplateController.remove);
+
+routes.route('/templates/:idTemplate/install')
+    .all(TokenController.validate)
+    .post(TemplateController.create);
 
 //STATUS COLUMNS
 routes.route('/projects/:projectId/statuscolumns')
